@@ -8,6 +8,7 @@ import java.awt.Component;
 import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.HeadlessException;
+import java.awt.List;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
@@ -28,9 +29,12 @@ import javax.sound.sampled.LineUnavailableException;
 import javax.sound.sampled.Mixer;
 import javax.swing.*;
 import javax.swing.border.LineBorder;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import javax.swing.filechooser.FileFilter;
 import javax.swing.plaf.basic.BasicScrollBarUI;
 import javax.swing.table.DefaultTableModel;
+
 
 /*
  * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
@@ -43,11 +47,12 @@ import javax.swing.table.DefaultTableModel;
  */
 
 
-public class MusicSample extends DefaultListCellRenderer implements ActionListener {
-    String user;
+public class FavoritesFrame extends DefaultListCellRenderer implements ActionListener {
 
     int song_count = 0;
+    String user;
     MP3Player player;
+    JButton btn_add;
     File songfile;
     String currentDirectory = "D:\\Music";
     String currentPath;
@@ -76,18 +81,48 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
     JButton account_symbol , btn_signin , btn_logout , btn_playlist;
     
     boolean sigined_in;
+    JLabel lbl_addsongs;
+    
+    //btn_add 
+    JFrame add_f;
+    JList add_l;
+    JScrollPane add_pane;
+    String[] add_songlist;
+    JButton add_done;
+    JLabel add_message;
+    
+    //btn_add
 
-    MusicSample(boolean sigined_in ,String user) {
+    
+    FavoritesFrame(boolean sigined_in ,String user) {
+        
+        
+        
+        lbl_addsongs = new JLabel("Add Songs");
+        lbl_addsongs.setBounds(830, 30, 150, 50);
+        lbl_addsongs.setBackground(Color.black);
+        lbl_addsongs.setBorder(new LineBorder(Color.black ,1));
+        lbl_addsongs.setFont(new Font("Arial " , Font.PLAIN , 22));
+        lbl_addsongs.setForeground(Color.white);
+        
+        btn_add = new JButton();
+        btn_add.setBounds(760, 25, 60, 60);
+        btn_add.addActionListener(this);
+        btn_add.setBorder(new LineBorder(Color.black ,1));
+        btn_add.setBackground(Color.BLACK);
+        btn_add.setIcon(new javax.swing.ImageIcon("D:\\Downloads\\Plus +-30-60-90-120-240-480px\\icons8-plus-+-60.png"));
+        btn_add.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        this.user  =user;
+        System.out.println(user);
         this.sigined_in = sigined_in;
-       this.user = user;
+       
         int c;
         l = new JList();
         account_symbol = new JButton();
         account_symbol.setBounds(20, 20, 60, 60);
-        if(! sigined_in)
-            account_symbol.setText("");
-        else
-            account_symbol.setText(user.substring(0, 1));
+       
+        account_symbol.setText(user.substring(0, 1));
         account_symbol.setBackground(Color.black);
         account_symbol.setForeground(Color.white);
         account_symbol.setBorder(new LineBorder(Color.darkGray));
@@ -95,9 +130,7 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
         
         acc_name = new JLabel();
         acc_name.setBounds(100, 20, 140, 60);
-        if(! sigined_in)
-            acc_name.setText("Signed Out");
-        else
+      
             acc_name.setText("Signed In");
         
         acc_name.setBackground(Color.black);
@@ -120,22 +153,28 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
             DefaultListModel Df = new DefaultListModel();
 
             while (rs.next()) {
-                song_count++;
+               
+                if(rs.getString(user).equals("1") )
+                {
+                    song_count++;
+                
+                
                 String song = rs.getString("NAME");
                 Df.addElement(song);
+                }
 
             }
             l.setModel(Df);
 
         } catch (ClassNotFoundException classNotFoundException) {
-            Logger.getLogger(MusicSample.class.getName()).log(Level.SEVERE, null, classNotFoundException);
+            Logger.getLogger(FavoritesFrame.class.getName()).log(Level.SEVERE, null, classNotFoundException);
         } catch (SQLException sQLException) {
-            Logger.getLogger(MusicSample.class.getName()).log(Level.SEVERE, null, sQLException);
+            Logger.getLogger(FavoritesFrame.class.getName()).log(Level.SEVERE, null, sQLException);
         } catch (HeadlessException headlessException) {
         }
 
         // l.setCellRenderer(new MyListCellThing());
-        title = new JLabel("My Music");
+        title = new JLabel("Favourites");
         l.setDragEnabled(true);
         l.setFixedCellHeight(60);
 
@@ -191,7 +230,7 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
         btn_logout.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
         
-        btn_playlist = new JButton("Favourites");
+        btn_playlist = new JButton("Music");
         btn_playlist.setBounds(20, 150, 210, 50);
          btn_playlist.setBackground(Color.darkGray);
         btn_playlist.setForeground(Color.white);
@@ -229,6 +268,8 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
         btn_icon = new JButton();
         f = new JFrame();
         btn_play = new JButton();
+        btn_play.setIcon(
+                new javax.swing.ImageIcon("D:\\Users\\Sharu\\NetBeansProjects\\MusicPlayer\\icons8-play-48.png"));
         btn_pause = new JButton();
         btn_upload = new JButton();
         btn_pause.setIcon(
@@ -267,8 +308,8 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
         btn_volumeup.setBounds(700, 500, 80, 80);
         btn_volumeup.setBackground(Color.black);
         btn_volumeup.setBorder(new LineBorder(Color.black, 1));
-
         
+       
         btn_play.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btn_pause.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btn_upload.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -290,9 +331,9 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
 
         btn_play.setBounds(890, 500, 80, 80);
         btn_play.setBackground(new java.awt.Color(0, 0, 0));
-        btn_play.setIcon(
-                new javax.swing.ImageIcon("D:\\Users\\Sharu\\NetBeansProjects\\MusicPlayer\\icons8-play-48.png"));
+        
         f.add(btn_pause);
+        f.add(btn_add);
         f.add(btn_upload);
         f.add(btn_play);
         f.add(pane);
@@ -310,13 +351,14 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
         f.add(btn_playlist);
         f.add(btn_signin);
         f.add(btn_logout);
+        f.add(lbl_addsongs);
        // p.add(btn_signin);
        f.add(account_symbol);
         f.setSize(1200, 630);
         f.setLayout(null);
         f.setResizable(false);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
+        add_l = new JList();
         //Option pane
         
         UIManager UI=new UIManager();
@@ -325,14 +367,26 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
  UI.put("Panel.background", Color.white);
         //Option pane
         
+        add_l.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                
+                    add_lValueChanged(evt);
+                
+            }
+        });
+        
         l.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                
                 try {
                     lValueChanged(evt);
                 } catch (SQLException ex) {
-                    Logger.getLogger(MusicSample.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(FavoritesFrame.class.getName()).log(Level.SEVERE, null, ex);
                 }
+                
             }
+
+            
         });
 
     }
@@ -390,35 +444,109 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
             }
         }
         
+        if(e.getSource()==btn_add)
+        {
+            int c;
+            
+            add_f = new JFrame();
+            add_done = new JButton();
+            try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/musicplayer?useSSL=false", "root",
+                    "Sharu#2022");
+            insert = con.prepareStatement("select * from music");
+
+            java.sql.ResultSet rs = insert.executeQuery();
+            ResultSetMetaData Rss = (ResultSetMetaData) rs.getMetaData();
+
+            c = Rss.getColumnCount();
+
+            DefaultListModel Df = new DefaultListModel();
+
+            while (rs.next()) {
+          
+                String song = rs.getString("NAME");
+                Df.addElement(song);
+
+            }
+            add_l.setModel(Df);
+            
+
+        } catch (ClassNotFoundException classNotFoundException) {
+            Logger.getLogger(MusicSample.class.getName()).log(Level.SEVERE, null, classNotFoundException);
+        } catch (SQLException sQLException) {
+            Logger.getLogger(MusicSample.class.getName()).log(Level.SEVERE, null, sQLException);
+        } catch (HeadlessException headlessException) {
+        }
+          add_l.setDragEnabled(true);
+        add_l.setFixedCellHeight(60);
+        add_l.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        add_l.setFont(new Font("Arial", Font.PLAIN, 21));
+        add_l.setVisibleRowCount(4);
+        add_l.setForeground(Color.white);
+        add_l.setSelectionBackground(Color.darkGray);
+        add_l.setSelectionForeground(Color.cyan);
+
+        // l.setBounds(100, 100, 700, 500);
+        add_l.setBackground(Color.black);
+        add_pane = new JScrollPane(add_l);
+        add_pane.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        add_pane.setBackground(Color.black);
+        add_pane.setBounds(20, 20, 920, 370);  
+        add_done.setBounds(450, 390, 70, 70);
+        add_done.setBackground(Color.black);
+        add_done.setBorder(new LineBorder(Color.black ,1));
+        add_done.setFocusable(false);
+        add_done.addActionListener(this);
+        add_done.setIcon(
+                new javax.swing.ImageIcon("D:\\Downloads\\Done-64-128px\\icons8-done-64.png"));
+        add_f.setVisible(true);
+        add_f.setSize(960 , 500);
+               add_f.add(add_done);
+               add_f.add(add_pane);
+
+        add_f.getContentPane().setBackground(Color.black);
+        add_f.setLayout(null);
+        
+        }
+        
+        if(e.getSource()== add_done)
+        {
+            System.out.println("button sada");
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/musicplayer?useSSL=false", "root",
+                        "Sharu#2022");
+            
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(FavoritesFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(FavoritesFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+          add_f.dispose();
+          f.dispose();
+          new FavoritesFrame(true , user);
+   
+        }
+        
         if(e.getSource() == btn_logout)
         {
-            if(! sigined_in)
+            
             {
-                JOptionPane.showMessageDialog(null,"You are not Signed in");
-            }
-            else
-            {
-                if(player != null)
-                    player.stop();
+                player.stop();
                 f.dispose();
-                new MusicSample(false ,"");
+                new MusicSample(false , "");
             }
         }
         
         if(e.getSource() == btn_playlist)
         {
-            if(! sigined_in)
-            {
-                 JOptionPane.showMessageDialog(null,"Sign In to view your favourites");
-            }
-            else
-            {
-                if(player != null)
-                    player.stop();
-                f.dispose();
-                System.out.println(user);
-                new FavoritesFrame(true , user);
-            }
+         
+            player.stop();
+            f.dispose();
+             new MusicSample(true ,user);
 
         }
         if(e.getSource() == btn_signin)
@@ -428,142 +556,43 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
                 JOptionPane.showMessageDialog(null,"You are already Signed In");
             }
             
-            else
-            {
-               // final_user = "";
-        pnl_siginin = new JFrame();
-        pnl_siginin.setDefaultCloseOperation(pnl_siginin.DO_NOTHING_ON_CLOSE);
-        empty = new JButton();
-        txt_username = new JTextField();
-        txt_password = new JTextField();
-        panel_siginin_button = new JButton("Sign In");
-        lbl_welcomeback = new JLabel("Welcome:)");
-        lbl_welcomeback.setFont(new Font("Ink Free" , Font.BOLD , 90 ));
-        lbl_welcomeback.setForeground(Color.WHITE);
-        lbl_welcomeback.setBounds(180 , 50, 800, 120);
-        lbl_username = new JLabel("User Name");
-        lbl_password = new JLabel("Password");
-        lbl_username.setForeground(Color.white);
-        lbl_username.setBounds(50 , 200, 800, 120);
-        lbl_username.setFont(new Font("Arial" , Font.BOLD ,50 ));
-        
-        txt_username.setForeground(Color.white);
-        txt_username.setBounds(320 , 225, 400, 60);
-        txt_username.setFont(new Font("Arial" , Font.PLAIN ,40 ));
-        txt_username.setBackground(Color.black);
-        txt_username.setBorder(new LineBorder(Color.WHITE , 1));
-        
-        txt_password.setForeground(Color.WHITE);
-        txt_password.setBounds(320 , 325, 400, 60);
-        txt_password.setFont(new Font("Arial" , Font.PLAIN ,40 ));
-        txt_password.setBackground(Color.black);
-        txt_password.setBorder(new LineBorder(Color.WHITE , 1));
-        
-        
-        lbl_password.setForeground(Color.white);
-        lbl_password.setBounds(50 , 300, 800, 120);
-        lbl_password.setFont(new Font("Arial" , Font.BOLD , 50 ));
-        
-        panel_siginin_button.setBounds(300, 420, 200, 80);
-        panel_siginin_button.setBackground(Color.black);
-        panel_siginin_button.setForeground(Color.white);
-        panel_siginin_button.setBorder(new LineBorder(Color.WHITE ,1));
-        panel_siginin_button.setFont(new Font("Arial" , Font.BOLD,30));
-        panel_siginin_button.setFocusable(false);
-        panel_siginin_button.addActionListener(this);
-        pnl_siginin.getContentPane().setBackground(Color.BLACK);
-        pnl_siginin.add(lbl_welcomeback);
-        pnl_siginin.add(lbl_username);
-        pnl_siginin.add(lbl_password);
-        pnl_siginin.add(txt_username);
-        pnl_siginin.add(txt_password);
-        pnl_siginin.add(panel_siginin_button);
-        pnl_siginin.add(empty);
-        pnl_siginin.setVisible(true);
-        pnl_siginin.setSize(800 , 600);
-        pnl_siginin.setLayout(null);
-        pnl_siginin.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        
-        this.user = txt_username.getText();
-              
-              }
-        }
-        
-        if(e.getSource() == panel_siginin_button)
-        {
-            
-            if(player != null)
-                player.stop();
-            String final_user = txt_username.getText();
-            String login = "SELECT * FROM users WHERE USERNAME=?";
-            try
-            {
-                java.sql.ResultSet rs;
-                          
-                Class.forName("com.mysql.cj.jdbc.Driver");
-                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/musicplayer?useSSL=false","root","Sharu#2022");
-                insert = con.prepareStatement(login);
-                insert.setString(1, txt_username.getText());
-                
-                
-                rs = insert.executeQuery();
-                
-                 if (rs.next()) 
-                     {
-                           System.out.println(rs.getString("PASSWORD"));
-                           System.out.println(txt_password.getText());
-                         if(rs.getString("PASSWORD").equals(txt_password.getText()))
-                         {
-                           
-                             
-                             pnl_siginin.dispose();
-                             sigined_in = true;
-                                acc_name.setText("Signed In");
-                                f.dispose();
-                                new MusicSample(true ,txt_username.getText() );
-                             
-                         }
-                         else
-                         {
-                             JOptionPane.showMessageDialog(null,"Incorrect password . Try Again ");
-                         }
-  
-                     }
-                 else
-                 {
-                         JOptionPane.showMessageDialog(null,"You are not registerd do you want to register ? ");
-                          login = "insert into users values(?,?)";
-                          insert = con.prepareStatement(login);
-                    insert.setString(1, txt_username.getText());
-                    insert.setString(2, txt_password.getText()); 
-                    insert.executeUpdate();
-                    
-                    insert = con.prepareStatement("ALTER TABLE music ADD " + txt_username.getText() + " VARCHAR(10) NOT NULL");
-                   
-                    insert.executeUpdate();
-                    pnl_siginin.dispose();
-                    
-                    account_symbol.setText(txt_username.getText().substring(0, 1));
-                             sigined_in = true;
-                                acc_name.setText("Signed In");
-                                f.dispose();
-                                new MusicSample(true ,txt_username.getText());
-                         
-                        
-                 }
-          
-            } catch (SQLException ex) {
-                Logger.getLogger(MusicSample.class.getName()).log(Level.SEVERE, null, ex);
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(MusicSample.class.getName()).log(Level.SEVERE, null, ex);
-            }
-        }
-    }
 
+        }
+      
+    }
+		
     private MP3Player mp3Player() {
         MP3Player mp3Player = new MP3Player();
         return mp3Player;
     }
+    
+    private void add_lValueChanged(javax.swing.event.ListSelectionEvent e) {
+                            System.out.println("hello");
+				java.util.List<String> obj = add_l.getSelectedValuesList();
+                                System.out.println(obj);
+                                
+                                for(String str : obj)
+                                {
+                                    System.out.println(str);
+                                    try {
+                                        System.out.println(user);
+                                        insert = con.prepareStatement("update music set "+ user + "=? where NAME =?");
+                                         insert.setString(1, "1");
+                                        insert.setString(2, str);
+                                        insert.executeUpdate();
+                                        System.out.println(str);
+                                    } catch (SQLException ex) {
+                                        Logger.getLogger(FavoritesFrame.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                   
+                
+                                }
+					
+			}
+
+                    public void valueChanged(ListSelectionEvent e) {
+                        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+                    }
 
     private void lValueChanged(javax.swing.event.ListSelectionEvent evt) throws SQLException {
         int c;
@@ -670,7 +699,7 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
     }
 
     public static void main(String[] args) {
-        new MusicSample(false , "");
+        new FavoritesFrame(false , "");
     }
 
 }
