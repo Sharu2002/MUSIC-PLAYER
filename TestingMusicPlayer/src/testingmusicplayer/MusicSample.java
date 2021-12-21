@@ -69,7 +69,8 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
     //Signin panel
     JFrame pnl_siginin;
     JLabel lbl_username , lbl_password , lbl_welcomeback;
-    JTextField txt_username , txt_password;
+    JTextField txt_username;
+           JPasswordField txt_password;
     JButton panel_siginin_button;
     //Siginin Panel
 
@@ -435,7 +436,7 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
         pnl_siginin.setDefaultCloseOperation(pnl_siginin.DO_NOTHING_ON_CLOSE);
         empty = new JButton();
         txt_username = new JTextField();
-        txt_password = new JTextField();
+        txt_password = new JPasswordField();
         panel_siginin_button = new JButton("Sign In");
         lbl_welcomeback = new JLabel("Welcome:)");
         lbl_welcomeback.setFont(new Font("Ink Free" , Font.BOLD , 90 ));
@@ -675,31 +676,3 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
 
 }
 
-class MyListCellThing extends JLabel implements ListCellRenderer {
-
-    public MyListCellThing() {
-        // setOpaque(true);
-
-    }
-
-    public MyListCellThing getListCellRendererComponent(JList l, String[] songlist, int index, boolean isSelected,
-            boolean cellHasFocus) {
-        // Assumes the stuff in the list has a pretty toString
-        // setText(songlist.toString());
-
-        // based on the index you set the color. This produces the every other effect.
-        if (index % 2 == 0)
-            l.setBackground(Color.BLACK);
-        else
-            l.setBackground(Color.DARK_GRAY);
-        return this;
-
-    }
-
-    @Override
-    public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected,
-            boolean cellHasFocus) {
-        throw new UnsupportedOperationException("Not supported yet."); // To change body of generated methods, choose
-                                                                       // Tools | Templates.
-    }
-}
