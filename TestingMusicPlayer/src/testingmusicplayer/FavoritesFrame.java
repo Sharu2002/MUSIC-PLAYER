@@ -53,6 +53,7 @@ public class FavoritesFrame extends DefaultListCellRenderer implements ActionLis
     String user;
     MP3Player player;
     JButton btn_add;
+    JButton btn_remove;
     File songfile;
     String currentDirectory = "D:\\Music";
     String currentPath;
@@ -82,6 +83,7 @@ public class FavoritesFrame extends DefaultListCellRenderer implements ActionLis
     
     boolean sigined_in;
     JLabel lbl_addsongs;
+    JLabel lbl_removesongs;
     
     //btn_add 
     JFrame add_f;
@@ -92,6 +94,15 @@ public class FavoritesFrame extends DefaultListCellRenderer implements ActionLis
     JLabel add_message;
     
     //btn_add
+    
+    //btn_remove
+    JFrame remove_f;
+    JList remove_l;
+    JScrollPane remove_pane;
+    String[] remove_songlist;
+    JButton remove_done;
+    JLabel remove_message;
+    //btn_reomve
 
     
     FavoritesFrame(boolean sigined_in ,String user) {
@@ -110,8 +121,23 @@ public class FavoritesFrame extends DefaultListCellRenderer implements ActionLis
         btn_add.addActionListener(this);
         btn_add.setBorder(new LineBorder(Color.black ,1));
         btn_add.setBackground(Color.BLACK);
-        btn_add.setIcon(new javax.swing.ImageIcon("D:\\Downloads\\Plus +-30-60-90-120-240-480px\\icons8-plus-+-60.png"));
+        btn_add.setIcon(new javax.swing.ImageIcon("D:\\Downloads\\Done-64-128px\\icons8-done-64.png"));
         btn_add.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        btn_remove = new JButton();
+        btn_remove.setBounds(520, 25, 60, 60);
+        btn_remove.addActionListener(this);
+        btn_remove.setBorder(new LineBorder(Color.black ,1));
+        btn_remove.setBackground(Color.BLACK);
+        btn_remove.setIcon(new javax.swing.ImageIcon("D:\\Downloads\\Remove-32-64px\\icons8-remove-32.png"));
+        btn_remove.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        lbl_removesongs = new JLabel("Remove Songs");
+        lbl_removesongs.setBounds(580, 30, 180, 50);
+        lbl_removesongs.setBackground(Color.black);
+        lbl_removesongs.setBorder(new LineBorder(Color.black ,1));
+        lbl_removesongs.setFont(new Font("Arial " , Font.PLAIN , 22));
+        lbl_removesongs.setForeground(Color.white);
         
         this.user  =user;
         System.out.println(user);
@@ -341,6 +367,7 @@ public class FavoritesFrame extends DefaultListCellRenderer implements ActionLis
         f.add(btn_icon);
         f.add(txt_display);
         f.add(no_of_songs);
+      f.add(btn_remove);
         // f.add(btn_volumeup);
         //f.add(p);
         f.add(acc_name);
@@ -352,6 +379,7 @@ public class FavoritesFrame extends DefaultListCellRenderer implements ActionLis
         f.add(btn_signin);
         f.add(btn_logout);
         f.add(lbl_addsongs);
+        f.add(lbl_removesongs);
        // p.add(btn_signin);
        f.add(account_symbol);
         f.setSize(1200, 630);
@@ -359,6 +387,7 @@ public class FavoritesFrame extends DefaultListCellRenderer implements ActionLis
         f.setResizable(false);
         f.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         add_l = new JList();
+        remove_l = new JList();
         //Option pane
         
         UIManager UI=new UIManager();
@@ -371,6 +400,14 @@ public class FavoritesFrame extends DefaultListCellRenderer implements ActionLis
             public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
                 
                     add_lValueChanged(evt);
+                
+            }
+        });
+        
+        remove_l.addListSelectionListener(new javax.swing.event.ListSelectionListener() {
+            public void valueChanged(javax.swing.event.ListSelectionEvent evt) {
+                
+                    remove_lValueChanged(evt);
                 
             }
         });
@@ -511,6 +548,98 @@ public class FavoritesFrame extends DefaultListCellRenderer implements ActionLis
         
         }
         
+        if(e.getSource() == btn_remove)
+        {
+            
+            System.out.println(user);
+              int c;
+            
+            remove_f = new JFrame();
+            remove_done = new JButton();
+            try {
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/musicplayer?useSSL=false", "root",
+                    "Sharu#2022");
+            insert = con.prepareStatement("select * from music");
+
+            java.sql.ResultSet rs = insert.executeQuery();
+            ResultSetMetaData Rss = (ResultSetMetaData) rs.getMetaData();
+
+            c = Rss.getColumnCount();
+
+            DefaultListModel Df = new DefaultListModel();
+
+            while (rs.next()) {
+               
+                if(rs.getString(user).equals("1") )
+                {
+                    
+                
+                
+                String song = rs.getString("NAME");
+                Df.addElement(song);
+                }
+
+            }
+            remove_l.setModel(Df);
+
+        } catch (ClassNotFoundException classNotFoundException) {
+            Logger.getLogger(MusicSample.class.getName()).log(Level.SEVERE, null, classNotFoundException);
+        } catch (SQLException sQLException) {
+            Logger.getLogger(MusicSample.class.getName()).log(Level.SEVERE, null, sQLException);
+        } catch (HeadlessException headlessException) {
+        }
+          remove_l.setDragEnabled(true);
+        remove_l.setFixedCellHeight(60);
+        remove_l.setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
+        remove_l.setFont(new Font("Arial", Font.PLAIN, 21));
+        remove_l.setVisibleRowCount(4);
+        remove_l.setForeground(Color.white);
+        remove_l.setSelectionBackground(Color.darkGray);
+        remove_l.setSelectionForeground(Color.cyan);
+
+        // l.setBounds(100, 100, 700, 500);
+        remove_l.setBackground(Color.black);
+        remove_pane = new JScrollPane(remove_l);
+        remove_pane.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        remove_pane.setBackground(Color.black);
+        remove_pane.setBounds(20, 20, 920, 370);  
+        remove_done.setBounds(450, 390, 70, 70);
+        remove_done.setBackground(Color.black);
+        remove_done.setBorder(new LineBorder(Color.black ,1));
+        remove_done.setFocusable(false);
+        remove_done.addActionListener(this);
+        remove_done.setIcon(
+                new javax.swing.ImageIcon("D:\\Downloads\\Done-64-128px\\icons8-done-64.png"));
+        remove_f.setVisible(true);
+        remove_f.setSize(960 , 500);
+               remove_f.add(remove_done);
+               remove_f.add(remove_pane);
+
+        remove_f.getContentPane().setBackground(Color.black);
+        remove_f.setLayout(null);
+        }
+        
+        if(e.getSource()== remove_done)
+        {
+            System.out.println("button sada");
+            try {
+                Class.forName("com.mysql.cj.jdbc.Driver");
+                con = DriverManager.getConnection("jdbc:mysql://localhost:3306/musicplayer?useSSL=false", "root",
+                        "Sharu#2022");
+            
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(FavoritesFrame.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (SQLException ex) {
+                Logger.getLogger(FavoritesFrame.class.getName()).log(Level.SEVERE, null, ex);
+            }
+
+          remove_f.dispose();
+          f.dispose();
+          new FavoritesFrame(true , user);
+        }
+        
         if(e.getSource()== add_done)
         {
             System.out.println("button sada");
@@ -535,7 +664,8 @@ public class FavoritesFrame extends DefaultListCellRenderer implements ActionLis
         {
             
             {
-                player.stop();
+                if(player != null)
+                    player.stop();
                 f.dispose();
                 new MusicSample(false , "");
             }
@@ -543,8 +673,8 @@ public class FavoritesFrame extends DefaultListCellRenderer implements ActionLis
         
         if(e.getSource() == btn_playlist)
         {
-         
-            player.stop();
+         if(player != null)
+                player.stop();
             f.dispose();
              new MusicSample(true ,user);
 
@@ -566,7 +696,7 @@ public class FavoritesFrame extends DefaultListCellRenderer implements ActionLis
         return mp3Player;
     }
     
-    private void add_lValueChanged(javax.swing.event.ListSelectionEvent e) {
+        private void add_lValueChanged(javax.swing.event.ListSelectionEvent e) {
                             System.out.println("hello");
 				java.util.List<String> obj = add_l.getSelectedValuesList();
                                 System.out.println(obj);
@@ -578,6 +708,31 @@ public class FavoritesFrame extends DefaultListCellRenderer implements ActionLis
                                         System.out.println(user);
                                         insert = con.prepareStatement("update music set "+ user + "=? where NAME =?");
                                          insert.setString(1, "1");
+                                        insert.setString(2, str);
+                                        insert.executeUpdate();
+                                        System.out.println(str);
+                                    } catch (SQLException ex) {
+                                        Logger.getLogger(FavoritesFrame.class.getName()).log(Level.SEVERE, null, ex);
+                                    }
+                                   
+                
+                                }
+					
+			}
+    
+    
+    private void remove_lValueChanged(javax.swing.event.ListSelectionEvent e) {
+                            System.out.println("hello");
+				java.util.List<String> obj = remove_l.getSelectedValuesList();
+                                System.out.println(obj);
+                                
+                                for(String str : obj)
+                                {
+                                    System.out.println(str);
+                                    try {
+                                        System.out.println(user);
+                                        insert = con.prepareStatement("update music set "+ user + "=? where NAME =?");
+                                         insert.setString(1, "0");
                                         insert.setString(2, str);
                                         insert.executeUpdate();
                                         System.out.println(str);
