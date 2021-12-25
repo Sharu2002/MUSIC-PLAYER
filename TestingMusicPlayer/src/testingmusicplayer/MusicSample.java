@@ -193,6 +193,8 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
         btn_logout.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
         
+        //alignment to btn_playlist was added
+        
         btn_playlist = new JButton("Favourites");
         btn_playlist.setBounds(20, 150, 210, 50);
          btn_playlist.setBackground(Color.darkGray);
@@ -202,6 +204,8 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
         btn_playlist.setFont(new Font("Arial", Font.PLAIN, 24));
         btn_playlist.addActionListener(this);
         btn_playlist.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        //alignment to btn_playlist completed
         
 
         // Panel closing
@@ -270,12 +274,12 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
         btn_volumeup.setBackground(Color.black);
         btn_volumeup.setBorder(new LineBorder(Color.black, 1));
 
-        
+        //alignment btnPlay was added
         btn_play.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btn_pause.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btn_upload.setCursor(new Cursor(Cursor.HAND_CURSOR));
         btn_volumedown.setCursor(new Cursor(Cursor.HAND_CURSOR));
-        
+        //alignment to btn_playlist closed
         
         
         btn_play.setBorder(new LineBorder(Color.black, 1));
