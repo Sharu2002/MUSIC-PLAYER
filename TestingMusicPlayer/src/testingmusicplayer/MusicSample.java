@@ -1,6 +1,6 @@
 package testingmusicplayer;
 
-//Comment addded
+
 import jaco.mp3.player.MP3Player;
 import com.mysql.cj.jdbc.result.ResultSetMetaData;
 import java.awt.Color;
@@ -43,9 +43,10 @@ import javax.swing.table.DefaultTableModel;
  */
 
 
-public class MusicSample extends DefaultListCellRenderer implements ActionListener {
+public class MusicSample extends DefaultListCellRenderer implements ActionListener 
+{
+    
     String user;
-
     int song_count = 0;
     MP3Player player;
     File songfile;
@@ -338,10 +339,14 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
 
     }
 
+
+//Method to filter .mp3 files from the specified folder
+
     private static class FileTypeFilter extends FileFilter {
 
-        private String extension;
-        private String description;
+        private String extension; // .mp3 extension
+        private String description; // mesage  - "Only mp3 files"
+
 
         public FileTypeFilter(String extension, String description) {
             this.extension = extension;
@@ -380,7 +385,7 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
 
         if (e.getSource() == btn_upload) {
             JFileChooser openFileChooser = new JFileChooser(currentDirectory);
-            openFileChooser.setFileFilter(new FileTypeFilter(".mp3", "Open MP3 files Only!"));
+            openFileChooser.setFileFilter(new FileTypeFilter(".mp3", "Open MP3 files Only!")); //Lists all .mp3 files in the current directory
             int result = openFileChooser.showOpenDialog(null);
             if (result == JFileChooser.APPROVE_OPTION) {
                 songfile = openFileChooser.getSelectedFile();
@@ -496,12 +501,15 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
             if(player != null)
                 player.stop();
             String final_user = txt_username.getText();
+            // SQL query to retrieve  from the table "users"
             String login = "SELECT * FROM users WHERE USERNAME=?";
             try
             {
                 java.sql.ResultSet rs;
                           
                 Class.forName("com.mysql.cj.jdbc.Driver");
+                
+                //Connecting to the data base
                 con = DriverManager.getConnection("jdbc:mysql://localhost:3306/musicplayer?useSSL=false","root","Sharu#2022");
                 insert = con.prepareStatement(login);
                 insert.setString(1, txt_username.getText());
@@ -595,7 +603,7 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
         player.play();
 
     }
-
+//Methods to control volume ------------ Volume down control
     private void volumeDownControl(Double valueMinus) {
         Mixer.Info[] mixers = AudioSystem.getMixerInfo();
 
@@ -632,6 +640,7 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
             }
         }
     }
+//Methods to control volume  ------------Volume up control
 
     private void volumeUpControl(Double valueMinus) {
         Mixer.Info[] mixers = AudioSystem.getMixerInfo();
