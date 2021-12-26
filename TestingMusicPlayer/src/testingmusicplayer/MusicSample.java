@@ -11,6 +11,7 @@ import java.awt.HeadlessException;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.IOException;
 import java.nio.file.Paths;
 import java.sql.DriverManager;
 import java.sql.PreparedStatement;
@@ -45,6 +46,9 @@ import javax.swing.table.DefaultTableModel;
 
 public class MusicSample extends DefaultListCellRenderer implements ActionListener {
     String user;
+    
+    JButton btn_register;JFrame f3;
+    JTextField txt_password1;
 
     int song_count = 0;
     MP3Player player;
@@ -74,7 +78,7 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
     JButton panel_siginin_button;
     //Siginin Panel
 
-    JButton account_symbol , btn_signin , btn_logout , btn_playlist;
+    JButton account_symbol , btn_signin , btn_logout , btn_playlist , delete_account , change_password;
     
     boolean sigined_in;
 
@@ -172,7 +176,7 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
         p.setBounds(20, 100, 210, 370);
         
         btn_signin = new JButton("Sign in");
-        btn_signin.setBounds(20, 250, 210, 50);
+        btn_signin.setBounds(20, 100, 210, 50);
          btn_signin.setBackground(Color.darkGray);
         btn_signin.setForeground(Color.white);
         btn_signin.setFocusable(false);
@@ -181,8 +185,29 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
         btn_signin.addActionListener(this);
         btn_signin.setCursor(new Cursor(Cursor.HAND_CURSOR));
         
+        delete_account = new JButton("Delete Account");
+        delete_account.setBounds(20, 180, 210, 50);
+         delete_account.setBackground(Color.darkGray);
+        delete_account.setForeground(Color.white);
+        delete_account.setFocusable(false);
+        delete_account.setBorder(new LineBorder(Color.black));
+        delete_account.setFont(new Font("Arial", Font.PLAIN, 24));
+        delete_account.addActionListener(this);
+        delete_account.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        
+        change_password = new JButton("Change Password");
+        change_password.setBounds(20, 260, 210, 50);
+         change_password.setBackground(Color.darkGray);
+        change_password.setForeground(Color.white);
+        change_password.setFocusable(false);
+        change_password.setBorder(new LineBorder(Color.black));
+        change_password.setFont(new Font("Arial", Font.PLAIN, 24));
+        change_password.addActionListener(this);
+        change_password.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
         btn_logout = new JButton("Logout");
-        btn_logout.setBounds(20, 350, 210, 50);
+        btn_logout.setBounds(20, 340, 210, 50);
          btn_logout.setBackground(Color.darkGray);
         btn_logout.setForeground(Color.white);
         btn_logout.setFocusable(false);
@@ -193,7 +218,7 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
         
         
         btn_playlist = new JButton("Favourites");
-        btn_playlist.setBounds(20, 150, 210, 50);
+        btn_playlist.setBounds(20, 420, 210, 50);
          btn_playlist.setBackground(Color.darkGray);
         btn_playlist.setForeground(Color.white);
         btn_playlist.setFocusable(false);
@@ -313,6 +338,8 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
         f.add(btn_logout);
        // p.add(btn_signin);
        f.add(account_symbol);
+       f.add(delete_account);
+       f.add(change_password);
         f.setSize(1200, 630);
         f.setLayout(null);
         f.setResizable(false);
@@ -388,6 +415,149 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
                 player.skipForward();
                 currentDirectory = songfile.getAbsolutePath();
                 txt_display.setText(songfile.getName());
+            }
+        }
+        
+        if(e.getSource() == change_password )
+        {
+            if(! sigined_in)
+            {
+                JOptionPane.showMessageDialog(null,"You are not Signed in");
+            }
+            else
+            {
+                
+    Connection con;
+     PreparedStatement insert;
+     String fu;
+     
+
+        
+    
+     f3 = new JFrame();
+        JButton empty = new JButton();
+        
+         txt_password1 = new JTextField();
+         btn_register = new JButton("Change");
+        JLabel lbl_welcomeback = new JLabel("Enter New Password");
+        lbl_welcomeback.setFont(new Font("Ink Free" , Font.BOLD , 50 ));
+        lbl_welcomeback.setForeground(Color.WHITE);
+        lbl_welcomeback.setBounds(200 , 50, 800, 120);
+       
+        JLabel lbl_password = new JLabel("Password");
+       
+        
+        
+        txt_password1.setForeground(Color.WHITE);
+        txt_password1.setBounds(320 , 225, 400, 60);
+        txt_password1.setFont(new Font("Ink Free" , Font.PLAIN ,40 ));
+        txt_password1.setBackground(Color.black);
+        txt_password1.setBorder(new LineBorder(Color.WHITE , 1));
+        
+        
+        lbl_password.setForeground(Color.red);
+        lbl_password.setBounds(50 , 200, 800, 120);
+        lbl_password.setFont(new Font("Ink Free" , Font.BOLD , 50 ));
+        
+        btn_register.setBounds(300, 420, 200, 80);
+        btn_register.setBackground(Color.green);
+        btn_register.setForeground(Color.BLACK);
+        btn_register.setFont(new Font("Ink Free" , Font.BOLD,30));
+        btn_register.setFocusable(false);
+        btn_register.addActionListener(this);
+        f3.getContentPane().setBackground(Color.BLACK);
+        f3.add(lbl_welcomeback);
+
+        f3.add(lbl_password);
+  
+        f3.add(txt_password1);
+        f3.add(btn_register);
+        f3.add(empty);
+        f3.setVisible(true);
+        f3.setSize(800 , 600);
+        f3.setLayout(null);
+        f3.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        
+       
+            }
+        }
+        
+         
+         if(e.getSource() == btn_register)
+         {
+                 try {
+                  
+     
+        
+                  
+                 String password = txt_password1.getText(); 
+
+           
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/musicplayer?useSSL=false", "root",
+                    "Sharu#2022");
+            insert = con.prepareStatement("update users set PASSWORD=? where USERNAME =? ");
+
+
+            
+            insert.setString(1, password);
+
+            insert.setString(2, user);
+            insert.executeUpdate();
+            
+ JOptionPane.showMessageDialog(null,"Password changed successfully");
+                         f3.dispose();
+                            
+           
+
+        } catch (ClassNotFoundException classNotFoundException) {
+            Logger.getLogger(MusicSample.class.getName()).log(Level.SEVERE, null, classNotFoundException);
+        } catch (SQLException sQLException) {
+            Logger.getLogger(MusicSample.class.getName()).log(Level.SEVERE, null, sQLException);
+        } catch (HeadlessException headlessException) {
+
+        }
+         }
+        
+        if(e.getSource() == delete_account )
+        {
+            if(! sigined_in)
+            {
+                JOptionPane.showMessageDialog(null,"You are not Signed in");
+            }
+            
+            else
+            {
+                
+                 try
+            {
+                
+                Class.forName("com.mysql.cj.jdbc.Driver");
+
+            con = DriverManager.getConnection("jdbc:mysql://localhost:3306/musicplayer?useSSL=false", "root",
+                    "Sharu#2022");
+            insert = con.prepareStatement("delete from users where USERNAME =? ");
+
+            insert.setString(1, user);
+            insert.executeUpdate();
+            
+            insert = con.prepareStatement("ALTER TABLE music DROP " + user );
+            insert.executeUpdate();
+            JOptionPane.showMessageDialog(null,"Your Account was deleted Successfully");
+            if(player != null)
+                    player.stop();
+                f.dispose();
+                new MusicSample(false ,"");
+
+            
+          
+            }catch (SQLException ex) {
+                Logger.getLogger(MusicSample.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (ClassNotFoundException ex) {
+                Logger.getLogger(MusicSample.class.getName()).log(Level.SEVERE, null, ex);
+            }
+                
             }
         }
         
