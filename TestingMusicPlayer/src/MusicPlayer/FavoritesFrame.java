@@ -1,4 +1,4 @@
-package testingmusicplayer;
+package MusicPlayer;
 
 //Comment addded
 import jaco.mp3.player.MP3Player;
@@ -511,9 +511,9 @@ public class FavoritesFrame extends DefaultListCellRenderer implements ActionLis
             
 
         } catch (ClassNotFoundException classNotFoundException) {
-            Logger.getLogger(MusicSample.class.getName()).log(Level.SEVERE, null, classNotFoundException);
+            Logger.getLogger(MainPlayer.class.getName()).log(Level.SEVERE, null, classNotFoundException);
         } catch (SQLException sQLException) {
-            Logger.getLogger(MusicSample.class.getName()).log(Level.SEVERE, null, sQLException);
+            Logger.getLogger(MainPlayer.class.getName()).log(Level.SEVERE, null, sQLException);
         } catch (HeadlessException headlessException) {
         }
           add_l.setDragEnabled(true);
@@ -585,9 +585,9 @@ public class FavoritesFrame extends DefaultListCellRenderer implements ActionLis
             remove_l.setModel(Df);
 
         } catch (ClassNotFoundException classNotFoundException) {
-            Logger.getLogger(MusicSample.class.getName()).log(Level.SEVERE, null, classNotFoundException);
+            Logger.getLogger(MainPlayer.class.getName()).log(Level.SEVERE, null, classNotFoundException);
         } catch (SQLException sQLException) {
-            Logger.getLogger(MusicSample.class.getName()).log(Level.SEVERE, null, sQLException);
+            Logger.getLogger(MainPlayer.class.getName()).log(Level.SEVERE, null, sQLException);
         } catch (HeadlessException headlessException) {
         }
           remove_l.setDragEnabled(true);
@@ -667,7 +667,7 @@ public class FavoritesFrame extends DefaultListCellRenderer implements ActionLis
                 if(player != null)
                     player.stop();
                 f.dispose();
-                new MusicSample(false , "");
+                new MainPlayer(false , "");
             }
         }
         
@@ -676,7 +676,7 @@ public class FavoritesFrame extends DefaultListCellRenderer implements ActionLis
          if(player != null)
                 player.stop();
             f.dispose();
-             new MusicSample(true ,user);
+             new MainPlayer(true ,user);
 
         }
         if(e.getSource() == btn_signin)
@@ -853,9 +853,9 @@ public class FavoritesFrame extends DefaultListCellRenderer implements ActionLis
         }
     }
 
-    public static void main(String[] args) {
-        new FavoritesFrame(false , "");
-    }
+//    public static void main(String[] args) {
+//        new FavoritesFrame(false , "");
+//    }
 
 }
 
@@ -877,6 +877,8 @@ class MyListCellThing extends JLabel implements ListCellRenderer {
         else
             l.setBackground(Color.DARK_GRAY);
         return this;
+        
+        
 
     }
 

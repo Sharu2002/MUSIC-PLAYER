@@ -1,8 +1,9 @@
-package testingmusicplayer;
+package MusicPlayer;
 
 //Comment addded
 import jaco.mp3.player.MP3Player;
 import com.mysql.cj.jdbc.result.ResultSetMetaData;
+import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Cursor;
@@ -43,7 +44,7 @@ import javax.swing.table.DefaultTableModel;
  */
 
 
-public class MusicSample extends DefaultListCellRenderer implements ActionListener {
+public class MainPlayer extends DefaultListCellRenderer implements ActionListener {
     String user;
 
     int song_count = 0;
@@ -52,7 +53,7 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
     String currentDirectory = "D:\\Music";
     String currentPath;
     String imagePath;
-    boolean repeat = false;
+    boolean repeat = true;
     JLabel title, no_of_songs;
     JPanel p;
     JFrame f;
@@ -77,8 +78,14 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
     JButton account_symbol , btn_signin , btn_logout , btn_playlist;
     
     boolean sigined_in;
+    
+    //Account_symbol
+    JFrame acc;
+    JButton delete_acc , change_password;
+    JLabel display_acc_name;
+    //Account Symbol
 
-    MusicSample(boolean sigined_in ,String user) {
+    MainPlayer(boolean sigined_in ,String user) {
         this.sigined_in = sigined_in;
        this.user = user;
         int c;
@@ -93,6 +100,8 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
         account_symbol.setForeground(Color.white);
         account_symbol.setBorder(new LineBorder(Color.darkGray));
         account_symbol.setFont(new Font("Arial", Font.PLAIN, 34));
+        account_symbol.setFocusable(false);
+        account_symbol.addActionListener(this);
         
         acc_name = new JLabel();
         acc_name.setBounds(100, 20, 140, 60);
@@ -129,9 +138,9 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
             l.setModel(Df);
 
         } catch (ClassNotFoundException classNotFoundException) {
-            Logger.getLogger(MusicSample.class.getName()).log(Level.SEVERE, null, classNotFoundException);
+            Logger.getLogger(MainPlayer.class.getName()).log(Level.SEVERE, null, classNotFoundException);
         } catch (SQLException sQLException) {
-            Logger.getLogger(MusicSample.class.getName()).log(Level.SEVERE, null, sQLException);
+            Logger.getLogger(MainPlayer.class.getName()).log(Level.SEVERE, null, sQLException);
         } catch (HeadlessException headlessException) {
         }
 
@@ -331,7 +340,7 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
                 try {
                     lValueChanged(evt);
                 } catch (SQLException ex) {
-                    Logger.getLogger(MusicSample.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(MainPlayer.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         });
@@ -367,15 +376,17 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
         }
 
         if (e.getSource() == btn_pause) {
-            player.pause();
+           // player.pause();
+           player.skipBackward();
         }
 
         if (e.getSource() == btn_volumedown) {
-            volumeDownControl(0.1);
+           // volumeDownControl(0.1);
 
         }
         if (e.getSource() == btn_volumeup) {
-            volumeUpControl(0.1);
+           // volumeUpControl(0.1);
+         
         }
 
         if (e.getSource() == btn_upload) {
@@ -402,8 +413,64 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
                 if(player != null)
                     player.stop();
                 f.dispose();
-                new MusicSample(false ,"");
+                new MainPlayer(false ,"");
             }
+        }
+        
+//        if(e.getSource() == account_symbol)
+//        {
+//            if(! sigined_in)
+//            {
+//                JOptionPane.showMessageDialog(null,"You are not Signed in");
+//            }
+//            
+//            //Account_symbol
+////    JFrame acc;
+////    JButton delete_acc , change_password;
+////    JLabel display_acc_name;
+//    //Account Symbol
+//
+//            
+//            else
+//            {
+//                acc = new JFrame();
+//                display_acc_name = new JLabel();
+//                display_acc_name.setText(user);
+//                display_acc_name.setForeground(Color.white);
+//                display_acc_name.setFont(new Font("Arial" , Font.PLAIN , 32));
+//                display_acc_name.setBounds(30, 10, 280, 50);
+//                
+//                delete_acc = new JButton("Delete Account");
+//                delete_acc.setForeground(Color.white);
+//                delete_acc.setBackground(Color.black);
+//                delete_acc.setFont(new Font("Arial" , Font.PLAIN , 22));
+//                delete_acc.setBounds(10, 100, 260, 50);
+//                delete_acc.addActionListener(this);
+//                delete_acc.setFocusable(false);
+//                
+//                change_password = new JButton("Change Password");
+//                change_password.setForeground(Color.white);
+//                change_password.setBackground(Color.black);
+//                change_password.setFont(new Font("Arial" , Font.PLAIN , 22));
+//                change_password.setBounds(10, 220, 260, 50);
+//                change_password.addActionListener(this);
+//                change_password.setFocusable(false);
+//                
+//                JButton b= new JButton();
+//                acc.setVisible(true);
+//                acc.setLayout(null);
+//                acc.setSize(300 , 360);
+//                acc.add(change_password);
+//                acc.add(delete_acc);
+//                acc.add(display_acc_name);
+//                acc.add(b);
+//                acc.getContentPane().setBackground(Color.black); 
+//            }
+//        }
+//        
+        if(e.getSource() == change_password)
+        {
+            
         }
         
         if(e.getSource() == btn_playlist)
@@ -521,7 +588,7 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
                              sigined_in = true;
                                 acc_name.setText("Signed In");
                                 f.dispose();
-                                new MusicSample(true ,txt_username.getText() );
+                                new MainPlayer(true ,txt_username.getText() );
                              
                          }
                          else
@@ -548,15 +615,15 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
                              sigined_in = true;
                                 acc_name.setText("Signed In");
                                 f.dispose();
-                                new MusicSample(true ,txt_username.getText());
+                                new MainPlayer(true ,txt_username.getText());
                          
                         
                  }
           
             } catch (SQLException ex) {
-                Logger.getLogger(MusicSample.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(MainPlayer.class.getName()).log(Level.SEVERE, null, ex);
             } catch (ClassNotFoundException ex) {
-                Logger.getLogger(MusicSample.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(MainPlayer.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -596,82 +663,10 @@ public class MusicSample extends DefaultListCellRenderer implements ActionListen
 
     }
 
-    private void volumeDownControl(Double valueMinus) {
-        Mixer.Info[] mixers = AudioSystem.getMixerInfo();
-
-        for (Mixer.Info mixerInfo : mixers) {
-            Mixer mixer = AudioSystem.getMixer(mixerInfo);
-
-            Line.Info[] lineInfos = mixer.getTargetLineInfo();
-
-            for (Line.Info lineInfo : lineInfos) {
-                Line line = null;
-                boolean opened = true;
-
-                try {
-                    line = mixer.getLine(lineInfo);
-                    opened = line.isOpen() || line instanceof Clip;
-
-                    if (!opened) {
-                        line.open();
-                    }
-                    FloatControl volControl = (FloatControl) line.getControl(FloatControl.Type.VOLUME);
-
-                    float currentVolume = volControl.getValue();
-                    Double volumeToCut = valueMinus;
-                    float changeCalc = (float) ((float) currentVolume - (double) volumeToCut);
-                    volControl.setValue(changeCalc);
-                } catch (LineUnavailableException exception) {
-                } catch (IllegalArgumentException illException) {
-                } finally {
-                    if (line != null && !opened) {
-                        line.close();
-                    }
-                }
-
-            }
-        }
-    }
-
-    private void volumeUpControl(Double valueMinus) {
-        Mixer.Info[] mixers = AudioSystem.getMixerInfo();
-
-        for (Mixer.Info mixerInfo : mixers) {
-            Mixer mixer = AudioSystem.getMixer(mixerInfo);
-
-            Line.Info[] lineInfos = mixer.getTargetLineInfo();
-
-            for (Line.Info lineInfo : lineInfos) {
-                Line line = null;
-                boolean opened = true;
-
-                try {
-                    line = mixer.getLine(lineInfo);
-                    opened = line.isOpen() || line instanceof Clip;
-
-                    if (!opened) {
-                        line.open();
-                    }
-                    FloatControl volControl = (FloatControl) line.getControl(FloatControl.Type.VOLUME);
-
-                    float currentVolume = volControl.getValue();
-                    Double volumeToCut = valueMinus;
-                    float changeCalc = (float) ((float) currentVolume + (double) volumeToCut);
-                    volControl.setValue(changeCalc);
-                } catch (LineUnavailableException exception) {
-                } catch (IllegalArgumentException illException) {
-                } finally {
-                    if (line != null && !opened) {
-                        line.close();
-                    }
-                }
-
-            }
-        }
-    }
+  
 
     public static void main(String[] args) {
-        new MusicSample(false , "");
+        new MainPlayer(false , "");
     }
 
 }
